@@ -12,10 +12,12 @@ namespace ProjectManger.Services
     public class LoginService
     {
         private PMContext _context;
+        private Encrypter _encrypter;
 
         public LoginService()
         {
             _context = new PMContext();
+            _encrypter = new Encrypter();
         }
         public LoggedInUser UserExists()
         {
@@ -32,18 +34,9 @@ namespace ProjectManger.Services
 
         public bool Login(LoginUserDto user)
         {
-            return _context.User.Any(x => x.Password == HashPassword(user.Password));
-        }
-
-        private string HashPassword(string password)
-        {
-            var alg = SHA256.Create();
-            StringBuilder sb = new StringBuilder();
-            foreach (var by in alg.ComputeHash(Encoding.UTF8.GetBytes(password)))
-            {
-                sb.Append(by.ToString("X2"));
-            }
-            return sb.ToString();
+            var salt = _encrypter.GetSalt(user.Password);
+            var hash = _encrypter.GetHash(user.Password, salt);
+            return _context.User.Any(x => x.Password == hash);
         }
     }
 }

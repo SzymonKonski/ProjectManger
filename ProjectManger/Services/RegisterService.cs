@@ -13,18 +13,22 @@ namespace ProjectManger.Services
     public class RegisterService
     {
         private PMContext _context;
+        private Encrypter _encrypter;
 
         public RegisterService()
         {
             _context = new PMContext();
+            _encrypter = new Encrypter();
         }
 
         public async Task Register(NewUserDto user)
         {
+            var salt = _encrypter.GetSalt(user.Password);
+            var hash = _encrypter.GetHash(user.Password, salt);
             var entity = new User
             {
                 Name = user.Name,
-                Password = HashPassword(user.Password)
+                Password = hash
             };
             _context.User.Add(entity);
             await _context.SaveChangesAsync();
