@@ -50,30 +50,19 @@ namespace ProjectManger.Services
             return dto;
         }
 
-        public IEnumerable<TaskListItemDto> GetTasks(long id)
+        public IEnumerable<ProjectDetailDto> GetAllProjects()
         {
-            var tasks = _context.Projects.Include(x => x.Tasks).Single(x => x.Id == id).Tasks.ToList();
-
-            return tasks.Select(x => new TaskListItemDto
+            var projects = _context.Projects.ToList().Select(x => new ProjectDetailDto
             {
-                Number = x.Id,
-                Title = x.Title,
-                Date = x.Date
+                Id = x.Id,
+                Name = x.Name,
+                Deadline = x.Deadline.ToString("dd-MM-yyyy") 
             });
-        }
 
-        public async Task AddTask(NewTaskDto task, long id)
-        {
-            var entity = new ProjectTask
-            {
-                Description = task.Description,
-                Date = task.Date,
-                Done = false,
-                Title = task.Title,
-            };
-
-            _context.Projects.Single(x => x.Id == id).Tasks.Add(entity);
-            await _context.SaveChangesAsync();
+            return projects;
         }
     }
+
+ 
+
 }

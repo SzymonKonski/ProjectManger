@@ -16,6 +16,13 @@ namespace ProjectManger.Controllers
         private ProjectService projectService = new ProjectService();
 
         [Route("")]
+        [HttpGet]
+        public IEnumerable<ProjectDetailDto> GetAll()
+        {
+            return projectService.GetAllProjects();
+        }
+
+        [Route("")]
         [HttpPost]
         public async Task<long> Create(NewProjectDto project)
         {
@@ -28,20 +35,5 @@ namespace ProjectManger.Controllers
         {
             return projectService.GetDetails(id);
         }
-
-        [Route("{id}/task")]
-        [HttpGet]
-        public IEnumerable<TaskListItemDto> GetTasks(long id)
-        {
-            return projectService.GetTasks(id);
-        }
-
-        [Route("{id}/task")]
-        [HttpPost]
-        public async Task AddTask([FromBody]NewTaskDto task, long id)
-        {
-            await projectService.AddTask(task, id);
-        }
-
     }
 }
