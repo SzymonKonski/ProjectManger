@@ -60,5 +60,19 @@ namespace ProjectManger.Services
                 Date = x.Date
             });
         }
+
+        public async Task AddTask(NewTaskDto task)
+        {
+            var entity = new ProjectTask
+            {
+                Description = task.Description,
+                Date = task.Date,
+                Done = false,
+                Title = task.Title,
+            };
+
+            _context.Projects.Single(x => x.Id == task.ProjectId).Tasks.Add(entity);
+            await _context.SaveChangesAsync();
+        }
     }
 }

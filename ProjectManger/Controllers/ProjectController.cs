@@ -33,7 +33,14 @@ namespace ProjectManger.Controllers
         [HttpGet]
         public IEnumerable<TaskListItemDto> GetTasks(long id)
         {
-            return projectService.GetTasks(id)
+            return projectService.GetTasks(id);
+        }
+
+        [Route("{id}/task")]
+        [HttpPost]
+        public async Task AddAsync(NewTaskDto task)
+        {
+           
         }
 
     }
