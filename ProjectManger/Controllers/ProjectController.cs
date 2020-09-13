@@ -22,9 +22,9 @@ namespace ProjectManger.Controllers
             return await projectService.CreateProject(project);
         }
 
-        [Route(":id")]
+        [Route("{id}")]
         [HttpGet]
-        public ProjectDetailDto GetDetails([FromQuery]long id)
+        public ProjectDetailDto GetDetails(long id)
         {
             return projectService.GetDetails(id);
         }
@@ -38,9 +38,9 @@ namespace ProjectManger.Controllers
 
         [Route("{id}/task")]
         [HttpPost]
-        public async Task AddAsync(NewTaskDto task)
+        public async Task AddTask([FromBody]NewTaskDto task, long id)
         {
-           
+            await projectService.AddTask(task, id);
         }
 
     }

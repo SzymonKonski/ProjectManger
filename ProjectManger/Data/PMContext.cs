@@ -16,5 +16,7 @@ namespace ProjectManger.Data
         public DbSet<User> User { get; set; }
         public DbSet<Project> Projects { get; set; }
 
+        public DbSet<ProjectTask> ProjectTasks { get; set; }
+
     }
 }

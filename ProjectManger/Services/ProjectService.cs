@@ -1,4 +1,5 @@
-﻿using ProjectManger.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using ProjectManger.Data;
 using ProjectManger.Data.Models;
 using ProjectManger.Dtos;
 using System;
@@ -51,7 +52,7 @@ namespace ProjectManger.Services
 
         public IEnumerable<TaskListItemDto> GetTasks(long id)
         {
-            var tasks = _context.Projects.Single(x => x.Id == id).Tasks.ToList();
+            var tasks = _context.Projects.Include(x => x.Tasks).Single(x => x.Id == id).Tasks.ToList();
 
             return tasks.Select(x => new TaskListItemDto
             {
@@ -61,7 +62,7 @@ namespace ProjectManger.Services
             });
         }
 
-        public async Task AddTask(NewTaskDto task)
+        public async Task AddTask(NewTaskDto task, long id)
         {
             var entity = new ProjectTask
             {
@@ -71,7 +72,7 @@ namespace ProjectManger.Services
                 Title = task.Title,
             };
 
-            _context.Projects.Single(x => x.Id == task.ProjectId).Tasks.Add(entity);
+            _context.Projects.Single(x => x.Id == id).Tasks.Add(entity);
             await _context.SaveChangesAsync();
         }
     }

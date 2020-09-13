@@ -8,7 +8,6 @@ namespace ProjectManger.Data.Models
 {
     public class Project
     {
-
         public Project() 
         {
             Tasks = new Collection<ProjectTask>();
