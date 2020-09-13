@@ -53,6 +53,15 @@ namespace ProjectManger.Services
 
             _context.ProjectTasks.Update(entity);
             _context.SaveChanges();
+
+            var project = _context.Projects.Include(x => x.Tasks).Single(x => x.Id == status.ProjectId);
+
+            if(project.Tasks.Any(x => x.Status == Enums.ProjectTaskStatus.InProgress))
+            {
+                project.Status = Enums.ProjectStatus.InProgress;
+                _context.Projects.Update(project);
+                _context.SaveChanges();
+            }
         }
     }
 }

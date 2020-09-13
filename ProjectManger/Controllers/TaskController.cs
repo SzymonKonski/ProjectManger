@@ -13,20 +13,25 @@ namespace ProjectManger.Controllers
     [ApiController]
     public class TaskController : ControllerBase
     {
-        private TaskService taskService = new TaskService();
+        private TaskService _taskService = new TaskService();
 
-        [Route("")]
-        [HttpGet]
+        [HttpGet("{id}/task")]
         public IEnumerable<TaskListItemDto> GetTasks(long id)
         {
-            return taskService.GetTasks(id);
+            return _taskService.GetTasks(id);
         }
 
-        [Route("")]
-        [HttpPost]
+        [HttpPost("{id}/task")]
         public async Task AddTask([FromBody] NewTaskDto task, long id)
         {
-            await taskService.AddTask(task, id);
+            await _taskService.AddTask(task, id);
+        }
+
+        [HttpPut("task/{id}")]
+        public void ChangeTaskStatus([FromBody] ProjectTaskStatusDto status, long id)
+        {
+            status.Id = id;
+            _taskService.ChangeStatus(status);
         }
     }
 }
