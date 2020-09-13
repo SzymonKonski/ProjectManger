@@ -12,8 +12,8 @@ namespace ProjectManger.Data.Models
         public ProjectTaskStatus Status { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
-        public string Date { get; set; }
-        public bool Done { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public DateTime Deadline  { get; set; }
         public long ProjectId { get; set; }
         public virtual Project Project { get; set; }
     }

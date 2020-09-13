@@ -25,7 +25,8 @@ namespace ProjectManger.Services
             {
                 Number = x.Id,
                 Title = x.Title,
-                Date = x.Date
+                Date = x.Deadline.ToString("dd-MM-yyyy"),
+                Status = x.Status.ToString()
             });
         }
 
@@ -34,13 +35,24 @@ namespace ProjectManger.Services
             var entity = new ProjectTask
             {
                 Description = task.Description,
-                Date = task.Date,
-                Done = false,
+                Deadline = DateTime.ParseExact(task.Date, "dd-MM-yyyy",null),
                 Title = task.Title,
+                CreatedDate = DateTime.Now,
+                Status = Enums.ProjectTaskStatus.New
             };
 
             _context.Projects.Single(x => x.Id == id).Tasks.Add(entity);
             await _context.SaveChangesAsync();
+        }
+
+        public void ChangeStatus(ProjectTaskStatusDto status)
+        {
+            var entity = _context.ProjectTasks.Single(x => x.Id == status.Id);
+
+            entity.Status = Enum.Parse<Enums.ProjectTaskStatus>(status.Status);
+
+            _context.ProjectTasks.Update(entity);
+            _context.SaveChanges();
         }
     }
 }

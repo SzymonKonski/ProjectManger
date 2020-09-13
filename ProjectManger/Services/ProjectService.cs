@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using ProjectManger.Data;
+﻿using ProjectManger.Data;
 using ProjectManger.Data.Models;
 using ProjectManger.Dtos;
 using System;
@@ -24,7 +23,8 @@ namespace ProjectManger.Services
             {
                 Name = project.Name,
                 Description = project.Description,
-                Deadline = DateTime.Parse(project.Deadline)
+                Deadline = DateTime.Parse(project.Deadline),
+                Status = Enums.ProjectStatus.New
             };
 
             _context.Projects.Add(entity);
@@ -44,7 +44,8 @@ namespace ProjectManger.Services
                 Id = project.Id,
                 Deadline = project.Deadline.ToString("dd-MM-yyyy"),
                 Description = project.Description,
-                Name = project.Name
+                Name = project.Name,
+                Status = project.Status.ToString()
             };
 
             return dto;
@@ -56,13 +57,11 @@ namespace ProjectManger.Services
             {
                 Id = x.Id,
                 Name = x.Name,
-                Deadline = x.Deadline.ToString("dd-MM-yyyy") 
+                Deadline = x.Deadline.ToString("dd-MM-yyyy"),
+                Status = x.Status.ToString()
             });
 
             return projects;
         }
     }
-
- 
-
 }

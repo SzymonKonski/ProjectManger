@@ -5,7 +5,10 @@ using System.Threading.Tasks;
 
 namespace ProjectManger.Enums
 {
-    public class ProjectTaskStatus
+    public enum ProjectTaskStatus
     {
+        New,
+        InProgress,
+        Finished
     }
 }
