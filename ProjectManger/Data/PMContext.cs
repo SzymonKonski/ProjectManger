@@ -14,6 +14,7 @@ namespace ProjectManger.Data
             optionsBuilder.UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=ProjectManagerDB;Trusted_Connection=True");
         }
         public DbSet<User> User { get; set; }
+        public DbSet<Project> Projects { get; set; }
 
     }
 }
