@@ -63,5 +63,13 @@ namespace ProjectManger.Services
 
             return projects;
         }
+
+        public void FinishProject(long id)
+        {
+            var project = _context.Projects.Single(x => x.Id == id);
+            project.Status = Enums.ProjectStatus.Finished;
+            _context.Projects.Update(project);
+            _context.SaveChanges();
+        }
     }
 }

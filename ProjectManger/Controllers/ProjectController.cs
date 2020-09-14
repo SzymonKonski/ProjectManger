@@ -13,27 +13,33 @@ namespace ProjectManger.Controllers
     [ApiController]
     public class ProjectController : ControllerBase
     {
-        private ProjectService projectService = new ProjectService();
+        private ProjectService _projectService = new ProjectService();
 
         [Route("")]
         [HttpGet]
         public IEnumerable<ProjectDetailDto> GetAll()
         {
-            return projectService.GetAllProjects();
+            return _projectService.GetAllProjects();
         }
 
         [Route("")]
         [HttpPost]
         public async Task<long> Create(NewProjectDto project)
         {
-            return await projectService.CreateProject(project);
+            return await _projectService.CreateProject(project);
         }
 
         [Route("{id}")]
         [HttpGet]
         public ProjectDetailDto GetDetails(long id)
         {
-            return projectService.GetDetails(id);
+            return _projectService.GetDetails(id);
+        }
+
+        [HttpPut("{id}/finish")]
+        public void FinishProject(long id)
+        {
+            _projectService.FinishProject(id);
         }
     }
 }
