@@ -1,4 +1,5 @@
-﻿using ProjectManger.Data;
+﻿using AutoMapper;
+using ProjectManger.Data;
 using ProjectManger.Data.Models;
 using ProjectManger.Dtos;
 using System;
@@ -11,27 +12,28 @@ namespace ProjectManger.Services
     public class ProjectService
     {
         private PMContext _context;
+        private readonly IMapper _mapper;
 
-        public ProjectService()
+
+        public ProjectService(IMapper mapper)
         {
             _context = new PMContext();
+            _mapper = mapper;
         }
 
-        public async Task<long> CreateProject(NewProjectDto project)
+        public async Task CreateProject(NewProjectDto project, long id)
         {
-            var entity = new Project
-            {
-                Name = project.Name,
-                Description = project.Description,
-                Deadline = DateTime.Parse(project.Deadline),
-                Status = Enums.ProjectStatus.New
-            };
+            //var entity = new Project
+            //{
+            //    Name = project.Name,
+            //    Description = project.Description,
+            //    Deadline = DateTime.Parse(project.Deadline),
+            //    Status = Enums.ProjectStatus.New
+            //};
 
-            _context.Projects.Add(entity);
-
-            await _context.SaveChangesAsync();
-
-            return entity.Id;
+            var entity = _mapper.Map<Project>(project);
+            _context.Clients.Single(x => x.Id == id).Projects.Add(entity);
+            await _context.SaveChangesAsync();        
         }
 
         public ProjectDetailDto GetDetails(long id)

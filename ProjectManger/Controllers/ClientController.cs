@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ProjectManger.Dtos;
+using ProjectManger.Services;
 
 namespace ProjectManger.Controllers
 {
@@ -12,10 +13,11 @@ namespace ProjectManger.Controllers
     [ApiController]
     public class ClientController : ControllerBase
     {
+        private readonly ClientService _clientService = new ClientService();
         [HttpPost]
         public void NewClient(NewClientDto client)
         {
-            
+            _clientService.Create(client);
         }
 
         [HttpGet("{id}")]

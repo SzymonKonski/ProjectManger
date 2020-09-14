@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ProjectManger.Dtos;
@@ -13,7 +14,15 @@ namespace ProjectManger.Controllers
     [ApiController]
     public class ProjectController : ControllerBase
     {
-        private ProjectService _projectService = new ProjectService();
+        private ProjectService _projectService;
+        private IMapper _mapper;
+
+        public ProjectController(IMapper mapper)
+        {
+            _mapper = mapper;
+            _projectService = new ProjectService(_mapper);
+        }
+
 
         [Route("")]
         [HttpGet]
@@ -22,11 +31,11 @@ namespace ProjectManger.Controllers
             return _projectService.GetAllProjects();
         }
 
-        [Route("")]
+        [Route("{id}")]
         [HttpPost]
-        public async Task<long> Create(NewProjectDto project)
+        public async Task Create([FromBody]  NewProjectDto project, long id)
         {
-            return await _projectService.CreateProject(project);
+            await _projectService.CreateProject(project,id);
         }
 
         [Route("{id}")]
