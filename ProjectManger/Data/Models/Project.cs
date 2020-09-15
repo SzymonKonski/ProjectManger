@@ -20,7 +20,6 @@ namespace ProjectManger.Data.Models
         public DateTime CreatedDate { get; set; }
         public ProjectStatus Status { get; set; }
         public decimal Pricing { get; set; }
-        public long  ClientId { get; set; }
         public virtual Client Client { get; set; }
         public virtual ICollection<ProjectTask> Tasks { get; set; }
     }

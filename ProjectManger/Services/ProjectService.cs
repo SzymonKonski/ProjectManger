@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using ProjectManger.Data;
 using ProjectManger.Data.Models;
 using ProjectManger.Dtos;
@@ -12,27 +13,32 @@ namespace ProjectManger.Services
     public class ProjectService
     {
         private PMContext _context;
-        private readonly IMapper _mapper;
 
-
-        public ProjectService(IMapper mapper)
+        public ProjectService()
         {
             _context = new PMContext();
-            _mapper = mapper;
         }
 
-        public async Task CreateProject(NewProjectDto project, long id)
+        public async Task CreateProject(NewProjectDto project)
         {
-            //var entity = new Project
-            //{
-            //    Name = project.Name,
-            //    Description = project.Description,
-            //    Deadline = DateTime.Parse(project.Deadline),
-            //    Status = Enums.ProjectStatus.New
-            //};
+            var entity = new Project
+            {
+                Name = project.Name,
+                Description = project.Description,
+                Deadline = DateTime.Parse(project.Deadline),
+                Status = Enums.ProjectStatus.New
+            };
 
-            var entity = _mapper.Map<Project>(project);
-            _context.Clients.Single(x => x.Id == id).Projects.Add(entity);
+            if(project.ClientId.HasValue)
+            {
+                var client = _context.Clients.Single(x => x.Id == project.ClientId.Value);
+                client.Projects.Add(entity);
+            }
+            else
+            {
+                _context.Projects.Add(entity);
+            }
+
             await _context.SaveChangesAsync();        
         }
 
@@ -55,12 +61,13 @@ namespace ProjectManger.Services
 
         public IEnumerable<ProjectDetailDto> GetAllProjects()
         {
-            var projects = _context.Projects.ToList().Select(x => new ProjectDetailDto
+            var projects = _context.Projects.Include(x => x.Client).ToList().Select(x => new ProjectDetailDto
             {
                 Id = x.Id,
                 Name = x.Name,
                 Deadline = x.Deadline.ToString("dd-MM-yyyy"),
-                Status = x.Status.ToString()
+                Status = x.Status.ToString(),
+                Client = x.Client != null ? x.Client.Name : string.Empty
             });
 
             return projects;

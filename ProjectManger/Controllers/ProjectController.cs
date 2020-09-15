@@ -14,14 +14,7 @@ namespace ProjectManger.Controllers
     [ApiController]
     public class ProjectController : ControllerBase
     {
-        private ProjectService _projectService;
-        private IMapper _mapper;
-
-        public ProjectController(IMapper mapper)
-        {
-            _mapper = mapper;
-            _projectService = new ProjectService(_mapper);
-        }
+        private ProjectService _projectService = new ProjectService();
 
 
         [Route("")]

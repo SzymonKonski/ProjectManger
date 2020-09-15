@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ProjectManger.Dtos;
@@ -13,23 +14,24 @@ namespace ProjectManger.Controllers
     [ApiController]
     public class ClientController : ControllerBase
     {
-        private readonly ClientService _clientService = new ClientService();
+        private readonly ClientService _clientService;
+     
         [HttpPost]
-        public void NewClient(NewClientDto client)
+        public long NewClient(NewClientDto client)
         {
-            _clientService.Create(client);
+           return _clientService.Create(client);
         }
 
         [HttpGet("{id}")]
         public ClientDetailsDto Get(long id)
         {
-            return null;
+           return _clientService.Get(id);
         }
 
         [HttpGet]
         public IEnumerable<ClientItemDto> GetAll()
         {
-            return null;
+            return _clientService.GetAll();
         }
     }
 }

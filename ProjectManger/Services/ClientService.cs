@@ -2,10 +2,8 @@
 using ProjectManger.Data;
 using ProjectManger.Data.Models;
 using ProjectManger.Dtos;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace ProjectManger.Services
 {
@@ -18,24 +16,25 @@ namespace ProjectManger.Services
             _context = new PMContext();
         }
 
-        public void Create(NewClientDto client)
+        public long Create(NewClientDto client)
         {
-            var entity = new Client
-            {
-                Name = client.Name,
+            var entity = new Client{
+                Address = client.Address,
                 Description = client.Description,
-                PhoneNumber = client.Phone,
                 Email = client.Email,
-                Address = client.Address
+                Name = client.Name,
+                PhoneNumber = client.Phone,
             };
 
             _context.Clients.Add(entity);
             _context.SaveChanges();
+            return entity.Id;
         }
 
         public IEnumerable<ClientItemDto> GetAll()
         {
             var entities = _context.Clients.Include(x => x.Projects).ToList();
+
             return entities.Select(x => new ClientItemDto
             {
                 Email = x.Email,
