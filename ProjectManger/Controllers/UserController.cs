@@ -1,20 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using ProjectManger.Dtos;
 using ProjectManger.Services;
 
 namespace ProjectManger.Controllers
 {
+    [AllowAnonymous]
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController : ControllerBase
+    public class UserController : ControllerBase            
     {
-        private RegisterService _registerService = new RegisterService();
-        private LoginService _loginService = new LoginService();
+        private RegisterService _registerService;
+        private LoginService _loginService;
+
+        public UserController(IOptions<SecuritySettings> config)
+        {
+            _registerService = new RegisterService();
+            _loginService = new LoginService(config);
+        }
+
         [Route("register")]
         [HttpPost]
         public async Task Register(NewUserDto user)
@@ -24,14 +30,14 @@ namespace ProjectManger.Controllers
 
         [Route("exists")]
         [HttpGet]
-        public LoggedInUser Exists()
+        public UsernameDto Exists()
         {
             return _loginService.UserExists();
         }
         
         [Route("login")]
         [HttpPost]
-        public bool Login(LoginUserDto user)
+        public LoggedInUser Login(LoginUserDto user)
         {
             return _loginService.Login(user);
         }

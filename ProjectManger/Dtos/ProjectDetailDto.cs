@@ -13,5 +13,7 @@ namespace ProjectManger.Dtos
         public string Description { get; set; }
         public string Status { get; set; }
         public string Client { get; set; }
+        public decimal Pricing { get;  set; }
+        public long ClientId { get;  set; }
     }
 }

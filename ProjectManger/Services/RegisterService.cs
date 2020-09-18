@@ -15,34 +15,23 @@ namespace ProjectManger.Services
         private PMContext _context;
         private Encrypter _encrypter;
 
-        public RegisterService()
-        {
-            _context = new PMContext();
-            _encrypter = new Encrypter();
+        public RegisterService(PMContext context, Encrypter encrypter)
+        { 
+            _context = context;
+            _encrypter = encrypter;
         }
 
         public async Task Register(NewUserDto user)
         {
+
+            if (_context.User.Any())
+                throw new ArgumentException("Already exists");
+
             var salt = _encrypter.GetSalt(user.Password);
             var hash = _encrypter.GetHash(user.Password, salt);
-            var entity = new User
-            {
-                Name = user.Name,
-                Password = hash
-            };
+            var entity = new User(user.Name, hash);
             _context.User.Add(entity);
             await _context.SaveChangesAsync();
-        }
-
-        private string HashPassword(string password)
-        {
-            var alg = SHA256.Create();
-            StringBuilder sb = new StringBuilder();
-            foreach (var by in alg.ComputeHash(Encoding.UTF8.GetBytes(password)))
-            {
-                sb.Append(by.ToString("X2"));
-            }
-            return sb.ToString();
         }
     }
 }

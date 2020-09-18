@@ -29,9 +29,9 @@ namespace ProjectManger.Services
                 Status = Enums.ProjectStatus.New
             };
 
-            if(project.ClientId.HasValue)
+            if(project.ClientId != 0)
             {
-                var client = _context.Clients.Single(x => x.Id == project.ClientId.Value);
+                var client = _context.Clients.Single(x => x.Id == project.ClientId);
                 client.Projects.Add(entity);
             }
             else
@@ -39,7 +39,7 @@ namespace ProjectManger.Services
                 _context.Projects.Add(entity);
             }
 
-            await _context.SaveChangesAsync();        
+            await _context.SaveChangesAsync();       
         }
 
         public ProjectDetailDto GetDetails(long id)
@@ -53,7 +53,9 @@ namespace ProjectManger.Services
                 Deadline = project.Deadline.ToString("dd-MM-yyyy"),
                 Description = project.Description,
                 Name = project.Name,
-                Status = project.Status.ToString()
+                Pricing = project.Pricing,
+                Status = project.Status.ToString(),
+                Client = project.Client != null ? project.Client.Name : string.Empty 
             };
 
             return dto;
@@ -67,7 +69,9 @@ namespace ProjectManger.Services
                 Name = x.Name,
                 Deadline = x.Deadline.ToString("dd-MM-yyyy"),
                 Status = x.Status.ToString(),
-                Client = x.Client != null ? x.Client.Name : string.Empty
+                Pricing = x.Pricing,
+                ClientId = x.ClientId,
+                Client = x.ClientId != 0  ? x.Client.Name : string.Empty
             });
 
             return projects;
@@ -75,10 +79,24 @@ namespace ProjectManger.Services
 
         public void FinishProject(long id)
         {
-            var project = _context.Projects.Single(x => x.Id == id);
+            var project = _context.Projects.Include(x=>x.Client).Single(x => x.Id == id);
             project.Status = Enums.ProjectStatus.Finished;
             _context.Projects.Update(project);
             _context.SaveChanges();
+        }
+
+        public IEnumerable<ProjectTasksDto> GetProjectTasksStatistic()
+        {
+            var projects = _context.Projects.Include(x => x.Tasks).Include(x => x.Client).OrderBy(x => x.CreatedDate).ToList().Select(x => new ProjectTasksDto
+            {
+                ProjectName = x.Name,
+                New = x.Tasks.Count(x=>x.Status == Enums.ProjectTaskStatus.New),
+                InProgress = x.Tasks.Count(x=> x.Status == Enums.ProjectTaskStatus.InProgress),
+                Finished = x.Tasks.Count(x => x.Status == Enums.ProjectTaskStatus.Finished),
+                ClientName = x.Client != null ? x.Client.Name : string.Empty
+            });
+
+            return projects;
         }
     }
 }

@@ -7,6 +7,13 @@ namespace ProjectManger.Dtos
 {
     public class LoggedInUser
     {
-        public string Name { get; set; }
+        public string Login { get; }
+        public string Token { get; }
+
+        public LoggedInUser(string login, string token)
+        {
+            Login = login;
+            Token = token;
+        }
     }
 }

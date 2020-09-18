@@ -15,7 +15,12 @@ namespace ProjectManger.Controllers
     public class ClientController : ControllerBase
     {
         private readonly ClientService _clientService;
-     
+
+        public ClientController(ClientService createService)
+        {
+            _clientService = createService;
+        }
+
         [HttpPost]
         public long NewClient(NewClientDto client)
         {

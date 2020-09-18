@@ -18,14 +18,7 @@ namespace ProjectManger.Services
 
         public long Create(NewClientDto client)
         {
-            var entity = new Client{
-                Address = client.Address,
-                Description = client.Description,
-                Email = client.Email,
-                Name = client.Name,
-                PhoneNumber = client.Phone,
-            };
-
+             var entity = new Client(client.Name,client.Address,client.Email,client.Phone, client.Description);
             _context.Clients.Add(entity);
             _context.SaveChanges();
             return entity.Id;

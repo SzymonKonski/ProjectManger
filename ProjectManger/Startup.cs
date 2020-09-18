@@ -28,12 +28,6 @@ namespace ProjectManger
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            var mapperConfig = new MapperConfiguration(mc =>
-            {
-                mc.AddProfile(new AutoMapping());
-            });
-            IMapper mapper = mapperConfig.CreateMapper();
-            services.AddSingleton(mapper);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -8,9 +8,14 @@ namespace ProjectManger.Data.Models
 {
     public class Client
     {
-        public Client()
+        public Client(string name, string address, string email, string phone, string description)
         {
             Projects = new Collection<Project>();
+            Name = name;
+            Address = address;
+            Email = email;
+            PhoneNumber = phone;
+            Description = description;
         }
         public long Id { get; set; }
         public string Name { get; set; }
